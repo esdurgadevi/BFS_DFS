@@ -237,3 +237,96 @@ class Solution {
 - If the x and y axis is 1 then we collect all the ones surronded to it from the top bottom, left and the right so each element we check if it is one and also if it is not visited so it is satisfy the both condition we call the find function.
 - What that function will do means get the four position of the current position also check if that four position are 1 and also that all are not visited if condition satisfy then call the same function for the currect coordinates.
 > [References](https://www.youtube.com/watch?v=muncqlKJrH0&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=8)
+
+### 733. Flood Fill
+[Leetcode link](https://leetcode.com/problems/flood-fill/)
+<br>
+You are given an image represented by an m x n grid of integers image, where image[i][j] represents the pixel value of the image. You are also given three integers sr, sc, and color. Your task is to perform a flood fill on the image starting from the pixel image[sr][sc].
+
+To perform a flood fill:
+
+Begin with the starting pixel and change its color to color.
+Perform the same process for each pixel that is directly adjacent (pixels that share a side with the original pixel, either horizontally or vertically) and shares the same color as the starting pixel.
+Keep repeating this process by checking neighboring pixels of the updated pixels and modifying their color if it matches the original color of the starting pixel.
+The process stops when there are no more adjacent pixels of the original color to update.
+Return the modified image after performing the flood fill.
+
+ 
+
+Example 1:
+
+Input: image = [[1,1,1],[1,1,0],[1,0,1]], sr = 1, sc = 1, color = 2
+
+Output: [[2,2,2],[2,2,0],[2,0,1]]
+
+Explanation:
+
+
+
+From the center of the image with position (sr, sc) = (1, 1) (i.e., the red pixel), all pixels connected by a path of the same color as the starting pixel (i.e., the blue pixels) are colored with the new color.
+
+Note the bottom corner is not colored 2, because it is not horizontally or vertically connected to the starting pixel.
+
+Example 2:
+
+Input: image = [[0,0,0],[0,0,0]], sr = 0, sc = 0, color = 0
+
+Output: [[0,0,0],[0,0,0]]
+
+Explanation:
+
+The starting pixel is already colored with 0, which is the same as the target color. Therefore, no changes are made to the image.
+
+ 
+
+Constraints:
+
+m == image.length
+n == image[i].length
+1 <= m, n <= 50
+0 <= image[i][j], color < 216
+0 <= sr < m
+0 <= sc < n
+
+```java
+class Solution {
+    public boolean is_valid(int x,int y,int[][] a,int set,boolean[][] v)
+    {
+        if(x>=0 && y>=0 && x<a.length && y<a[0].length)
+        {
+            if(a[x][y] == set && !v[x][y]) return true;
+            else return false;
+        }
+        return false;
+    }
+    public int[][] floodFill(int[][] image, int sr, int sc, int color) {
+        boolean[][] v = new boolean[image.length][image[0].length];
+        int set = image[sr][sc];
+        image[sr][sc] = color;
+        find(sr,sc,image,color,set,v);
+        return image;
+    }
+
+    public void find(int x,int y,int[][] image,int color,int set,boolean[][] v)
+    {
+        int[] dx = {0,-1,0,1};
+        int[] dy = {-1,0,1,0};
+        for(int i=0;i<4;i++)
+        {
+            int newx = x+dx[i]; 
+            int newy = y+dy[i];
+            if(is_valid(newx,newy,image,set,v))
+            {
+                image[newx][newy] = color;
+                v[newx][newy] = true;
+                find(newx,newy,image,color,set,v);
+            }
+        }
+    }
+}
+```
+- In this code we fill the color that is they give sr and sc in the image matrix in the sr and sc position what color will be there we fo to four distance up down left and right if the going cell containe the first color means we change the color and from the cell we explore the cells.
+- So valid function is x>=0 And y>=0 and x<n and y<m and not visited and the cell must be equal to the first color if all the condition are satisfy we return true.
+- other wise we return false
+- if it is valid we call the same function
+> [Refrence](https://www.youtube.com/watch?v=C-2_uSRli8o&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=9)
