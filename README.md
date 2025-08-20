@@ -403,4 +403,5 @@ class Solution {
     }
 }
 ```
+- In this what we do is make traverse the graph berath wise check current nodes adjacency node is visited or not if it is not visited then add to the queue current as a parent it it is visited means check current nodes parent or not if that is not even the current node parent means other node that will visit this node so cycle will appear so that time return true in final return false.
 > [Reference](https://www.youtube.com/watch?v=BPlrALf1LDU&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=11)
