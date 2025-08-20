@@ -330,3 +330,77 @@ class Solution {
 - other wise we return false
 - if it is valid we call the same function
 > [Refrence](https://www.youtube.com/watch?v=C-2_uSRli8o&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=9)
+### Undirected Graph Cycle
+[Geeks for Geeks](https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1)
+<br>
+Given an undirected graph with V vertices and E edges, represented as a 2D vector edges[][], where each entry edges[i] = [u, v] denotes an edge between vertices u and v, determine whether the graph contains a cycle or not. The graph can have multiple component.
+
+Examples:
+
+Input: V = 4, E = 4, edges[][] = [[0, 1], [0, 2], [1, 2], [2, 3]]
+Output: true
+Explanation: 
+ 
+1 -> 2 -> 0 -> 1 is a cycle.
+Input: V = 4, E = 3, edges[][] = [[0, 1], [1, 2], [2, 3]]
+Output: false
+Explanation: 
+ 
+No cycle in the graph.
+Constraints:
+1 ≤ V ≤ 105
+1 ≤ E = edges.size() ≤ 105
+
+```java
+class Solution {
+    public boolean find(List<List<Integer>> li,int i,boolean[] v)
+    {
+        v[i] = true;
+        
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{i,-1});
+        
+        while(!q.isEmpty())
+        {
+            int[] t = q.poll();
+            List<Integer> temp = li.get(t[0]);
+            for(int x:temp)
+            {
+                if(!v[x]) 
+                {
+                    v[x] = true;
+                    q.add(new int[]{x,t[0]});
+                }
+                else if(t[1] != x) return true;
+            }
+        }
+        return false;
+    }
+    public boolean isCycle(int V, int[][] edges) {
+        List<List<Integer>> li = new ArrayList<>();
+        
+        for(int i=0;i<V;i++) li.add(new ArrayList<>());
+        
+        for(int i=0;i<edges.length;i++)
+        {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            
+            li.get(u).add(v);
+            li.get(v).add(u);
+        }
+        
+        boolean[] v = new boolean[V];
+        
+        for(int i=0;i<V;i++)
+        {
+            if(!v[i])
+            {
+                if(find(li,i,v)) return true;
+            }
+        }
+        return false;
+    }
+}
+```
+> [Reference](https://www.youtube.com/watch?v=BPlrALf1LDU&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=11)
