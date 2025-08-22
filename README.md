@@ -405,3 +405,70 @@ class Solution {
 ```
 - In this what we do is make traverse the graph berath wise check current nodes adjacency node is visited or not if it is not visited then add to the queue current as a parent it it is visited means check current nodes parent or not if that is not even the current node parent means other node that will visit this node so cycle will appear so that time return true in final return false.
 > [Reference](https://www.youtube.com/watch?v=BPlrALf1LDU&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=11)
+
+### Undirected Graph Cycle
+[Geeks for Geeks](https://www.geeksforgeeks.org/problems/detect-cycle-in-an-undirected-graph/1)
+<br>
+Given an undirected graph with V vertices and E edges, represented as a 2D vector edges[][], where each entry edges[i] = [u, v] denotes an edge between vertices u and v, determine whether the graph contains a cycle or not. The graph can have multiple component.
+
+Examples:
+
+Input: V = 4, E = 4, edges[][] = [[0, 1], [0, 2], [1, 2], [2, 3]]
+Output: true
+Explanation: 
+ 
+1 -> 2 -> 0 -> 1 is a cycle.
+Input: V = 4, E = 3, edges[][] = [[0, 1], [1, 2], [2, 3]]
+Output: false
+Explanation: 
+ 
+No cycle in the graph.
+Constraints:
+1 ≤ V ≤ 105
+1 ≤ E = edges.size() ≤ 105
+
+```java
+class Solution {
+    public boolean isCycle(int V, int[][] edges) {
+        if(V<=2) return false;
+        boolean[] v = new boolean[V];
+        List<List<Integer>> li = new ArrayList<>();
+        for(int i=0;i<V;i++)
+        {
+            li.add(new ArrayList<>());
+        }
+        for(int[] x:edges)
+        {
+            li.get(x[0]).add(x[1]);
+            li.get(x[1]).add(x[0]);
+        }
+        boolean ans = false;
+        for(int i=0;i<V;i++)
+        {
+            if(!v[i]) 
+            {
+                //v[i] = true;
+                if(find(i,-1,v,li)) return true;
+            }
+        }
+        return false;
+    }
+    public boolean find(int n,int p,boolean[] v,List<List<Integer>> li)
+    {
+        v[n] = true;
+        List<Integer> t = li.get(n);
+        for(int x:t)
+        {
+            if(x != p && v[x]) return true;
+            if(!v[x]) 
+            {
+                v[x] = true;
+                if(find(x,n,v,li)) return true;
+            }
+        }
+        return false;
+    }
+}
+```
+- In this what we do is make traverse the graph berath wise check current nodes adjacency node is visited or not if it is not visited then add to the queue current as a parent it it is visited means check current nodes parent or not if that is not even the current node parent means other node that will visit this node so cycle will appear so that time return true in final return false.
+> [Reference](https://www.youtube.com/watch?v=zQ3zgFypzX4&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=12)
