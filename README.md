@@ -472,3 +472,71 @@ class Solution {
 ```
 - In this what we do is make traverse the graph berath wise check current nodes adjacency node is visited or not if it is not visited then add to the queue current as a parent it it is visited means check current nodes parent or not if that is not even the current node parent means other node that will visit this node so cycle will appear so that time return true in final return false.
 > [Reference](https://www.youtube.com/watch?v=zQ3zgFypzX4&list=PLgUwDviBIf0oE3gA41TKO2H5bHpPd7fzn&index=12)
+
+### 498. Diagonal Traverse
+[Leetcode link](https://leetcode.com/problems/diagonal-traverse/description/?envType=daily-question&envId=2025-08-25)
+<br>
+Given an m x n matrix mat, return an array of all the elements of the array in a diagonal order.
+
+ 
+
+Example 1:
+
+
+Input: mat = [[1,2,3],[4,5,6],[7,8,9]]
+Output: [1,2,4,7,5,3,6,8,9]
+Example 2:
+
+Input: mat = [[1,2],[3,4]]
+Output: [1,2,3,4]
+ 
+
+Constraints:
+
+m == mat.length
+n == mat[i].length
+1 <= m, n <= 104
+1 <= m * n <= 104
+-105 <= mat[i][j] <= 105
+
+```java
+class Solution {
+    public boolean is_valid(int x,int y,boolean[][] v)
+    {
+        return (x>=0 && y>=0 && x<v.length && y<v[0].length && !v[x][y]);
+    }
+    public int[] findDiagonalOrder(int[][] mat) {
+        int[] ans = new int[mat.length*mat[0].length];
+        Queue<int[]> q = new LinkedList<>();
+        int x = 0,y = 0,flag = 0,idx = 0;
+        q.add(new int[]{0,0});
+        boolean[][] v = new boolean[mat.length][mat[0].length];
+        v[0][0] = true;
+        while(!q.isEmpty())
+        {
+            List<Integer> li = new ArrayList<>();
+            int size = q.size();
+            while(size>0)
+            {
+                int[] curr = q.poll();
+                li.add(mat[curr[0]][curr[1]]);
+                if(is_valid(curr[0]+1,curr[1],v))
+                {
+                    v[curr[0]+1][curr[1]] = true;
+                    q.add(new int[]{curr[0]+1,curr[1]});
+                }
+                if(is_valid(curr[0],curr[1]+1,v))
+                {
+                    v[curr[0]][curr[1]+1] = true;
+                    q.add(new int[]{curr[0],curr[1]+1});
+                }
+                size--;
+            }
+            if(flag == 1) Collections.reverse(li);
+            for(int temp:li) ans[idx++] = temp;
+            flag = 1-flag;
+        }
+        return ans;   
+    }
+}
+```
