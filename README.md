@@ -540,3 +540,184 @@ class Solution {
     }
 }
 ```
+### 934. Shortest Bridge
+[Leetcode link](https://leetcode.com/problems/shortest-bridge/)
+<br>
+You are given an n x n binary matrix grid where 1 represents land and 0 represents water.
+
+An island is a 4-directionally connected group of 1's not connected to any other 1's. There are exactly two islands in grid.
+
+You may change 0's to 1's to connect the two islands to form one island.
+
+Return the smallest number of 0's you must flip to connect the two islands.
+
+ 
+
+Example 1:
+
+Input: grid = [[0,1],[1,0]]
+Output: 1
+Example 2:
+
+Input: grid = [[0,1,0],[0,0,0],[0,0,1]]
+Output: 2
+Example 3:
+
+Input: grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]]
+Output: 1
+ 
+
+Constraints:
+
+n == grid.length == grid[i].length
+2 <= n <= 100
+grid[i][j] is either 0 or 1.
+There are exactly two islands in grid.
+
+```java
+class Solution {
+    public int[] ax = {0,-1,0,1};
+    public int[] ay = {-1,0,1,0};
+    public boolean is_valid(int x,int y,int[][] grid,boolean[][] v)
+    {
+        return (x>=0 && y>=0 && x<grid.length && y<grid[0].length && !v[x][y]);
+    }
+    public int shortestBridge(int[][] grid) {
+        int ans = 1;
+        boolean flag = false;
+        Queue<int[]> q = new LinkedList<>();
+        boolean[][] v = new boolean[grid.length][grid[0].length];
+        for(int i=0;i<grid.length;i++)
+        {
+            for(int j=0;j<grid[0].length;j++)
+            {
+                if(grid[i][j] == 1)
+                {
+                    v[i][j] = true;
+                    find(i,j,grid,v,q);
+                    flag = true;
+                    break;
+                }
+            }
+            if(flag == true) break;
+        }
+        while(!q.isEmpty())
+        {
+            int size = q.size();
+            while(size>0)
+            {
+                int[] temp = q.poll();
+                for(int i=0;i<4;i++)
+                {
+                    int nx = temp[0]+ax[i];
+                    int ny = temp[1]+ay[i];
+                    if(is_valid(nx,ny,grid,v))
+                    {
+                        if(grid[nx][ny] == 1) return ans;
+                        q.add(new int[]{nx,ny});
+                        v[nx][ny] = true; 
+                    }
+                }
+                size--;
+            }
+            ans++;
+            //System.out.println(temp[0]+" "+temp[1]);
+        }
+        return ans;
+    }
+    public void find(int x,int y,int[][] grid,boolean[][] v,Queue<int[]> q)
+    {
+        if(grid[x][y] == 0) 
+        {
+            q.add(new int[]{x,y});
+            return;
+        }
+        for(int i=0;i<4;i++)
+        {
+            int nx = x+ax[i];
+            int ny = y+ay[i];
+            if(is_valid(nx,ny,grid,v))
+            {
+                v[nx][ny] = true;
+                find(nx,ny,grid,v,q);
+            }
+        }
+    }
+}
+```
+- First we find the first occuring island(1) and cover all the 1's surronding to this 1 in 4 directions then whenever 0 occur we added that position to the queueu
+- No at each level we find any one is occur that is the second island so using bfs we find the second island in minimum distance.
+
+### 542. 01 Matrix
+[Leetcode link](https://leetcode.com/problems/01-matrix/description/)
+<br>
+Given an m x n binary matrix mat, return the distance of the nearest 0 for each cell.
+
+The distance between two cells sharing a common edge is 1.
+
+ 
+
+Example 1:
+
+
+Input: mat = [[0,0,0],[0,1,0],[0,0,0]]
+Output: [[0,0,0],[0,1,0],[0,0,0]]
+Example 2:
+
+
+Input: mat = [[0,0,0],[0,1,0],[1,1,1]]
+Output: [[0,0,0],[0,1,0],[1,2,1]]
+ 
+
+Constraints:
+
+m == mat.length
+n == mat[i].length
+1 <= m, n <= 104
+1 <= m * n <= 104
+mat[i][j] is either 0 or 1.
+There is at least one 0 in mat.
+
+```java
+class Solution {
+    public boolean is_valid(int x,int y,int[][] g,boolean[][] v)
+    {
+        return (x>=0 && y>=0 && x<g.length && y<g[0].length && !v[x][y]);
+    }
+    public int[] x = {0,-1,0,1};
+    public int[] y = {-1,0,1,0};
+    public int[][] updateMatrix(int[][] mat) {
+        int[][] ans = new int[mat.length][mat[0].length];
+        Queue<int[]> q = new LinkedList<>();
+        boolean[][] v = new boolean[mat.length][mat[0].length];
+        for(int i=0;i<mat.length;i++)
+        {
+            for(int j=0;j<mat[0].length;j++)
+            {
+                if(mat[i][j] == 0) 
+                {
+                    q.add(new int[]{i,j,0}); 
+                    v[i][j] = true;
+                }
+            }
+        }
+        while(!q.isEmpty())
+        {
+            int[] temp = q.poll();
+            for(int i=0;i<4;i++)
+            {
+                int nx = temp[0]+x[i];
+                int ny = temp[1]+y[i];
+                if(is_valid(nx,ny,mat,v))
+                {
+                    v[nx][ny] = true;
+                    ans[nx][ny] = temp[2]+1;
+                    q.add(new int[]{nx,ny,temp[2]+1});
+                }
+            }
+        }
+        return ans;
+    }
+}
+```
+> [Refrence](https://www.youtube.com/watch?v=edXdVwkYHF8)
