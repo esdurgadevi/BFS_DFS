@@ -1043,7 +1043,7 @@ beginWord, endWord, and wordList[i] consist of lowercase English letters.
 beginWord != endWord
 All the words in wordList are unique.
 
-```jva
+```java
 class Solution {
     public int ladderLength(String beginWord, String endWord, List<String> wordList) {
         int ans = 1;
