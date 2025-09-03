@@ -721,3 +721,290 @@ class Solution {
 }
 ```
 > [Refrence](https://www.youtube.com/watch?v=edXdVwkYHF8)
+### 130. Surrounded Regions
+[Leetcode link](https://leetcode.com/problems/surrounded-regions/)
+<br>
+You are given an m x n matrix board containing letters 'X' and 'O', capture regions that are surrounded:
+
+Connect: A cell is connected to adjacent cells horizontally or vertically.
+Region: To form a region connect every 'O' cell.
+Surround: The region is surrounded with 'X' cells if you can connect the region with 'X' cells and none of the region cells are on the edge of the board.
+To capture a surrounded region, replace all 'O's with 'X's in-place within the original board. You do not need to return anything.
+
+ 
+
+Example 1:
+
+Input: board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
+
+Output: [["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
+
+Explanation:
+
+
+In the above diagram, the bottom region is not captured because it is on the edge of the board and cannot be surrounded.
+
+Example 2:
+
+Input: board = [["X"]]
+
+Output: [["X"]]
+
+ 
+
+Constraints:
+
+m == board.length
+n == board[i].length
+1 <= m, n <= 200
+board[i][j] is 'X' or 'O'.
+
+```java
+class Solution {
+    public boolean is_valid(int x,int y,char[][] b,boolean[][] v)
+    {
+        return (x>=0 && y>=0 && x<b.length && y<b[0].length && !v[x][y] && b[x][y] == 'O');
+    }
+    public int[] ax = {0,-1,0,1};
+    public int[] ay = {-1,0,1,0};
+    public void solve(char[][] board) {
+        boolean[][] v = new boolean[board.length][board[0].length];
+        //first row
+        for(int i=0;i<board[0].length;i++)
+        {
+            if(board[0][i] == 'O') 
+            {
+                board[0][i] = 'S';
+                v[0][i] = true;
+                dfs(0,i,board,v);
+            }
+        }
+        //last row
+        int n = board.length;
+        for(int i=0;i<board[0].length;i++)
+        {
+            if(board[n-1][i] == 'O') 
+            {
+                board[n-1][i] = 'S';
+                v[n-1][i] = true;
+                dfs(n-1,i,board,v);
+            }
+        }
+        //first column
+        for(int i=0;i<board.length;i++)
+        {
+            if(board[i][0] == 'O') 
+            {
+                board[i][0] = 'S';
+                v[i][0] = true;
+                dfs(i,0,board,v);
+            }
+        }
+        //last column
+        n = board[0].length;
+        for(int i=0;i<board.length;i++)
+        {
+            if(board[i][n-1] == 'O') 
+            {
+                v[i][n-1] = true;
+                board[i][n-1] = 'S';
+                dfs(i,n-1,board,v);
+            }
+        }
+
+        for(int i=0;i<board.length;i++)
+        {
+            for(int j=0;j<board[0].length;j++)
+            {
+                if(board[i][j] == 'S') board[i][j] = 'O';
+                else board[i][j] = 'X';
+            } 
+        }
+        return;
+    }
+    public void dfs(int x,int y,char[][] board,boolean[][] v)
+    {
+        for(int i=0;i<4;i++)
+        {
+            int nx = x+ax[i];
+            int ny = y+ay[i];
+            if(is_valid(nx,ny,board,v))
+            {
+                v[nx][ny] = true;
+                board[nx][ny] = 'S';
+                dfs(nx,ny,board,v);
+            }
+        }
+    }
+}
+```
+- In this first we find and mark the final region that is border of the array as S and directly or indirectly connected to this O as also S
+- So except the S all the O's are must be converted as X.
+
+### 1020. Number of Enclaves
+[Leetcode link](https://leetcode.com/problems/number-of-enclaves/)
+<br>
+You are given an m x n binary matrix grid, where 0 represents a sea cell and 1 represents a land cell.
+
+A move consists of walking from one land cell to another adjacent (4-directionally) land cell or walking off the boundary of the grid.
+
+Return the number of land cells in grid for which we cannot walk off the boundary of the grid in any number of moves.
+
+ 
+
+Example 1:
+
+
+Input: grid = [[0,0,0,0],[1,0,1,0],[0,1,1,0],[0,0,0,0]]
+Output: 3
+Explanation: There are three 1s that are enclosed by 0s, and one 1 that is not enclosed because its on the boundary.
+Example 2:
+
+
+Input: grid = [[0,1,1,0],[0,0,1,0],[0,0,1,0],[0,0,0,0]]
+Output: 0
+Explanation: All 1s are either on the boundary or can reach the boundary.
+ 
+
+Constraints:
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 500
+grid[i][j] is either 0 or 1.
+
+```java
+class Solution {
+    public int[] ax ={0,-1,0,1};
+    public int[] ay = {-1,0,1,0};
+    public int ones = 0;
+    public boolean is_valid(int x,int y,int[][] g,boolean[][] v)
+    {
+        return (x>=0 && y>=0 && x<g.length && y<g[0].length && !v[x][y] && g[x][y] == 1);
+    }
+    public int numEnclaves(int[][] grid) {
+        boolean[][] v = new boolean[grid.length][grid[0].length];
+        for(int i=0;i<grid.length;i++)
+        {
+            for(int j=0;j<grid[0].length;j++)
+            {
+                if((grid[i][j] == 1)) 
+                {
+                    ones++;
+                }
+            }
+        }
+        //first row
+        for(int i=0;i<grid[0].length;i++)
+        {
+            if(grid[0][i] == 1 && !v[0][i]) 
+            {
+                v[0][i] = true;
+                ones--;
+                dfs(0,i,grid,v);
+            }
+        }
+        //last row
+        int n = grid.length;
+        for(int i=0;i<grid[0].length;i++)
+        {
+            if(grid[n-1][i] == 1 && !v[n-1][i]) 
+            {
+                v[n-1][i] = true;
+                ones--;
+                dfs(n-1,i,grid,v);
+            }
+        }
+        //first column
+        for(int i=0;i<grid.length;i++)
+        {
+            if(grid[i][0] == 1 && !v[i][0]) 
+            {
+                ones--;
+                v[i][0] = true;
+                dfs(i,0,grid,v);
+            }
+        }
+        //last column
+        n = grid[0].length;
+        for(int i=0;i<grid.length;i++)
+        {
+            if(grid[i][n-1] == 1 && !v[i][n-1]) 
+            {
+                ones--;
+                v[i][n-1] = true;
+                dfs(i,n-1,grid,v);
+            }
+        }
+        return ones<=0?0:ones;
+    }
+    public void dfs(int x,int y,int[][] grid,boolean[][] v)
+    {
+        for(int i=0;i<4;i++)
+        {
+            int nx = x+ax[i];
+            int ny = y+ay[i];
+            if(is_valid(nx,ny,grid,v))
+            {
+                ones--;
+                v[nx][ny] = true;
+                dfs(nx,ny,grid,v);
+            }
+        }
+    }
+}
+```
+- In this they ask which are the land not possible to reach the boundry that is which is not directly or indirectly connected to the boundry.
+- So first i find all the ones in the grid
+- then minus the boundry ones using dfs
+### Other method simple optimization
+```java
+class Solution {
+    public int[] ax ={0,-1,0,1};
+    public int[] ay = {-1,0,1,0};
+    public int ones = 0;
+    public boolean is_valid(int x,int y,int[][] g,boolean[][] v)
+    {
+        return (x>=0 && y>=0 && x<g.length && y<g[0].length && !v[x][y] && g[x][y] == 1);
+    }
+    public int numEnclaves(int[][] grid) {
+        boolean[][] v = new boolean[grid.length][grid[0].length];
+        for(int i=0;i<grid.length;i++)
+        {
+            for(int j=0;j<grid[0].length;j++)
+            {
+                if((grid[i][j] == 1)) 
+                {
+                    ones++;
+                    if(i==0 || j==0 || i==grid.length-1 || j==grid[0].length-1)
+                    {
+                        if(!v[i][j])
+                        {
+                            v[i][j] = true;
+                            ones--;
+                            dfs(i,j,grid,v);
+                        }
+                    }
+                }
+            }
+        }
+        return ones;
+    }
+    public void dfs(int x,int y,int[][] grid,boolean[][] v)
+    {
+        for(int i=0;i<4;i++)
+        {
+            int nx = x+ax[i];
+            int ny = y+ay[i];
+            if(is_valid(nx,ny,grid,v))
+            {
+                ones--;
+                v[nx][ny] = true;
+                dfs(nx,ny,grid,v);
+            }
+        }
+    }
+}
+```
+- in this in single traversel we check if it is one or not
+- then check the boundry condition if it is boundry and not visited then call dfs and each time decrease the one count.
